@@ -1,0 +1,24 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+    <strong>Olá, {{ name }}</strong>
+    <p>Neste site você pode escolher este os vários aplicativos que temos disponíveis para usar a vontade!</p>
+    <p>Escolha um para começar:</p>
+
+    <ul class="providers">
+
+      <li class="provider">
+        <div>
+          <strong>Gerador aleatório de palavras</strong>
+        </div>
+        <a href="/gerador-aleatorio">Ir</a>
+      </li>
+
+      
+
+    </ul>
+
+    <a href="/logout" class="logout">Sair</a>
+  </div>
+{% endblock %}

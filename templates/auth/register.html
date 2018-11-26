@@ -1,0 +1,16 @@
+{% extends "_layouts/auth.html" %}
+
+{% block body %}
+  <form action="/register" method="post">
+  
+    {{ form.email }}
+
+    {{ form.password }}
+
+    {{ form.hidden_tag() }}
+    
+    <button type="submit">Registrar-se</button>
+
+    <a href="/login">Já tenho uma conta.</a>
+  </form>
+{% endblock %}

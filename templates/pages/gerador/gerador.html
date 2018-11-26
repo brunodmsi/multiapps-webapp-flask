@@ -1,0 +1,30 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+  
+    {% if form %}
+      <form action="/gerador-aleatorio" method="post">
+        <p>Gerador que gera palavra de 8 caracteres com 4 silabas.</p>
+        {{ form.lines }}
+
+        {{ form.hidden_tag() }}
+
+        <button type="submit">Gerar Palavras</button>
+      </form>
+    {% endif %}
+
+    {% if wordlist %}
+      <ul class="providers">
+      {% for word in wordlist %}
+        <li class="provider">
+          <strong>{{ word }}</strong>
+        </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    <br>
+    <a href="/" class="logout">Voltar</a>
+  </div>
+{% endblock %}
