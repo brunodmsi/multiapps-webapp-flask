@@ -9,6 +9,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 import programs.random_gen.main as rand_gen
 import programs.imc.imc as imc
 from programs.vigenere.vigenere import Vigenere
+from programs.blockchain.chain import Chain
 
 app = Flask(__name__)
 
@@ -59,6 +60,9 @@ class VigenereForm(FlaskForm):
   password = StringField('password', validators=[InputRequired()], render_kw={"placeholder":"Senha"})
   decrypt = SelectField(u'Descriptografar', choices=[('false', 'Não'), ('true', 'Sim')])
 
+class BlockchainForm(FlaskForm):
+  blocks = IntegerField('blocks', validators=[InputRequired()], render_kw={"placeholder": "Número de blocos a serem criados"})
+
 @app.route('/register', methods=['GET','POST'])
 def register():
   if current_user.is_authenticated == True:
@@ -102,10 +106,10 @@ def gerador():
     if form.validate():
       wordlist = rand_gen.ret_list(None, form.lines.data)
       return render_template('pages/gerador/gerador.html', wordlist=wordlist)
-
   return render_template('pages/gerador/gerador.html', form=form)
 
 @app.route('/imc', methods=['GET','POST'])
+@login_required
 def imcCheck():
   form = IMCForm()
   if request.method == 'POST':
@@ -116,7 +120,18 @@ def imcCheck():
 
   return render_template('pages/imc/imc.html', form=form)
 
+@app.route('/blockchain', methods=['GET','POST'])
+@login_required
+def blockchain():
+  form = BlockchainForm()
+  if request.method == 'POST':
+    if form.validate():
+      chain = Chain().generate_chain(form.blocks.data)
+      return render_template('pages/blockchain/index.html', chain=chain)
+  return render_template('pages/blockchain/index.html', form=form)
+
 @app.route('/vigenere', methods=['GET','POST'])
+@login_required
 def vigenere():
   form = VigenereForm()
   if request.method == 'POST':
@@ -130,11 +145,13 @@ def vigenere():
   return render_template('pages/vigenere/vigenere.html', form=form)
 
 @app.route('/todolist', methods=['GET'])
+@login_required
 def todoListView():
   list = TodoList.objects(user_id=current_user.id)
   return render_template('pages/todolist/index.html', list=list)
 
 @app.route('/todolist/create', methods=['GET','POST'])
+@login_required
 def todoListCreate():
   form = ToDoListForm()
   if request.method == 'POST':
@@ -144,16 +161,19 @@ def todoListCreate():
   return render_template('pages/todolist/create.html', form=form)
 
 @app.route('/todolist/<todoId>', methods=['GET'])
+@login_required
 def todoListShow(todoId):
   todo = TodoList.objects(id=todoId).first()
   return render_template('pages/todolist/show.html', todo=todo)
 
 @app.route('/todolist/delete/<todoId>', methods=['GET'])
+@login_required
 def todoListDelete(todoId):
   todo = TodoList(id=todoId).delete()
   return redirect('/todolist')
 
 @app.route('/todolist/edit/<todoId>', methods=['GET','POST'])
+@login_required
 def todoListEdit(todoId):
   form = ToDoListForm()
   if request.method == 'POST':

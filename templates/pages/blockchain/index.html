@@ -1,0 +1,34 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+  
+    {% if form %}
+      <form action="/blockchain" method="post">
+        <p>Crie seu proprio Blockchain.</p>
+        {{ form.blocks }}
+
+        {{ form.hidden_tag() }}
+
+        <button type="submit">Enviar</button>
+      </form>
+      
+      <br>
+      <a href="/" class="logout">Voltar</a>
+    {% endif %}
+
+    {% if chain %}
+      <ul class="providers">
+      {% for block in chain %}
+        <li class="provider">
+          <strong>{{ block.hash }}</strong><strong>#{{ block.index }}</strong>
+        </li>
+      {% endfor %}
+      </ul>
+
+      <br>
+      <a href="/blockchain" class="logout">Voltar</a>
+    {% endif %}
+    
+  </div>
+{% endblock %}
