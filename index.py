@@ -1,13 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mongoengine import MongoEngine, Document
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, FloatField
+from wtforms import StringField, PasswordField, IntegerField, FloatField, SelectField, TextAreaField
 from wtforms.validators import Email, Length, InputRequired
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 import programs.random_gen.main as rand_gen
 import programs.imc.imc as imc
+from programs.vigenere.vigenere import Vigenere
 
 app = Flask(__name__)
 
@@ -27,6 +28,12 @@ class User(UserMixin, db.Document):
   email = db.StringField(max_length=30)
   password = db.StringField()
 
+class TodoList(db.Document):
+  meta = {'collection': 'todolists'}
+  user_id = db.ReferenceField(User)
+  title = db.StringField(max_length=30)
+  content = db.StringField()
+
 @login_manager.user_loader
 def load_user(user_id):
   return User.objects(pk=user_id).first()
@@ -45,8 +52,12 @@ class IMCForm(FlaskForm):
 
 class ToDoListForm(FlaskForm):
   title = StringField('title', validators=[InputRequired(), Length(max=30)], render_kw={"placeholder":"Titulo"})
-  content = StringField('title', validators=[InputRequired(), Length(min=6)], render_kw={"placeholder":"Texto"})
+  content = TextAreaField('title', validators=[InputRequired(), Length(min=5)], render_kw={"placeholder":"Texto"})
 
+class VigenereForm(FlaskForm):
+  plaintext = StringField('plaintext', validators=[InputRequired()], render_kw={"placeholder":"Texto para decifrar/codificar"})
+  password = StringField('password', validators=[InputRequired()], render_kw={"placeholder":"Senha"})
+  decrypt = SelectField(u'Descriptografar', choices=[('false', 'Não'), ('true', 'Sim')])
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -105,9 +116,56 @@ def imcCheck():
 
   return render_template('pages/imc/imc.html', form=form)
 
-@app.route('/imc', methods=['GET','POST'])
-def todoList():
+@app.route('/vigenere', methods=['GET','POST'])
+def vigenere():
+  form = VigenereForm()
+  if request.method == 'POST':
+    if form.validate():
+      decrypt = form.decrypt.data
+      if decrypt == 'false': decrypt = False
+      if decrypt == 'true': decrypt = True
+      vig = Vigenere().encrypt(form.plaintext.data, form.password.data, decrypt)
+      return render_template('pages/vigenere/vigenere.html', vig=vig, decrypt=decrypt, plaintext=form.plaintext.data)
+      
+  return render_template('pages/vigenere/vigenere.html', form=form)
+
+@app.route('/todolist', methods=['GET'])
+def todoListView():
+  list = TodoList.objects(user_id=current_user.id)
+  return render_template('pages/todolist/index.html', list=list)
+
+@app.route('/todolist/create', methods=['GET','POST'])
+def todoListCreate():
   form = ToDoListForm()
+  if request.method == 'POST':
+    if form.validate():
+      todo = TodoList(current_user.id, form.title.data, form.content.data).save()
+      return redirect('/todolist')
+  return render_template('pages/todolist/create.html', form=form)
+
+@app.route('/todolist/<todoId>', methods=['GET'])
+def todoListShow(todoId):
+  todo = TodoList.objects(id=todoId).first()
+  return render_template('pages/todolist/show.html', todo=todo)
+
+@app.route('/todolist/delete/<todoId>', methods=['GET'])
+def todoListDelete(todoId):
+  todo = TodoList(id=todoId).delete()
+  return redirect('/todolist')
+
+@app.route('/todolist/edit/<todoId>', methods=['GET','POST'])
+def todoListEdit(todoId):
+  form = ToDoListForm()
+  if request.method == 'POST':
+    if form.validate():
+      # todo = TodoList.objects(id=todoId).first().delete()
+      # new_todo = TodoList(user_id=current_user.id, title=form.title.data, content=form.content.data).save()
+      new_todo = TodoList(id=todoId).update(title=form.title.data, content=form.content.data)
+      return redirect('/todolist')
+  todo = TodoList.objects(id=todoId).first()
+  form.title.data = todo.title
+  form.content.data = todo.content
+  return render_template('pages/todolist/edit.html', form=form, todo=todo)
 
 @app.route('/logout', methods=['GET'])
 @login_required

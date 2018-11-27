@@ -1,0 +1,22 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+  
+    {% if form %}
+      <form action="/todolist/create" method="post">
+        <p>Crie o seu novo afazer.</p>
+        {{ form.title }}
+        {{ form.content }}
+
+        {{ form.hidden_tag() }}
+
+        <button type="submit">Criar</button>
+      </form>
+      
+      <br>
+      <a href="/todolist" class="logout">Voltar</a>
+    {% endif %}
+    
+  </div>
+{% endblock %}

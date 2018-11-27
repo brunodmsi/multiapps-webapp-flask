@@ -1,0 +1,24 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+    <a href="/todolist/create">Criar novo</a>
+
+    <br>
+
+    {% if list %}
+      <ul class="providers">
+        {% for l in list %}
+          <li class="provider">            
+            <strong>{{ l.title }}</strong>
+            <a href="/todolist/{{ l.id }}">Ver</a>          
+          </li>
+        {% endfor %}
+      </ul>
+
+    {% endif %}
+    
+    <br>
+    <a href="/" class="logout">Voltar</a>
+  </div>
+{% endblock %}

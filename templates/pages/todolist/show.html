@@ -1,0 +1,22 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+
+    {% if todo %}
+      <ul class="providers">
+        <strong>{{ todo.title }}</strong><br>
+        <li class="provider">            
+          <p href="">{{ todo.content }}</p>
+        </li>
+      </ul>
+
+      <a href="/todolist/edit/{{ todo.id }}" >Editar</a>
+      <a href="/todolist/delete/{{ todo.id }}" class="logout">Deletar</a>
+
+      <br><hr>
+      <a href="/todolist" class="logout">Voltar</a>
+    {% endif %}
+    
+  </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+  
+    {% if form %}
+      <form action="/vigenere" method="post">
+        <p>Programa que irá criptografar ou descriptografar sua palavra cifrada em Vigenere.</p>
+        {{ form.plaintext }}
+        {{ form.password }}
+
+        {{ form.decrypt.label }}
+        {{ form.decrypt }}
+        <br><br>
+
+        {{ form.hidden_tag() }}
+
+        <button type="submit">Enviar</button>
+      </form>
+
+
+      <br>
+      <a href="/" class="logout">Voltar</a>
+    {% endif %}
+
+    {% if vig %}
+      <ul class="providers">
+        <li class="provider">
+          {% if decrypt %}
+            <strong>A palavra {{ plaintext }} descriptografada é:</strong><p>{{ vig }}</p>
+          {% else %}
+            <strong>A palavra {{ plaintext }} criptografada é:</strong><p>{{ vig }}</p>
+          {% endif %}
+        </li>
+      </ul>
+
+      <br>
+      <a href="/vigenere" class="logout">Voltar</a>
+    {% endif %}
+    
+  </div>
+{% endblock %}

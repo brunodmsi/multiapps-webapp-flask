@@ -14,6 +14,9 @@
 
         <button type="submit">Calcular IMC</button>
       </form>
+      
+      <br>
+      <a href="/" class="logout">Voltar</a>
     {% endif %}
 
     {% if imc_value %}
@@ -25,9 +28,10 @@
           <strong>Você está com:</strong><p>{{ imc_result }}</p>
         </li>
       </ul>
-    {% endif %}
 
-    <br>
-    <a href="/" class="logout">Voltar</a>
+      <br>
+      <a href="/imc" class="logout">Voltar</a>
+    {% endif %}
+    
   </div>
 {% endblock %}

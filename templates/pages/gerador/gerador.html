@@ -12,6 +12,10 @@
 
         <button type="submit">Gerar Palavras</button>
       </form>
+
+
+    <br>
+    <a href="/" class="logout">Voltar</a>
     {% endif %}
 
     {% if wordlist %}
@@ -22,9 +26,10 @@
         </li>
       {% endfor %}
       </ul>
+
+      <br>
+      <a href="/gerador-aleatorio" class="logout">Voltar</a>
     {% endif %}
 
-    <br>
-    <a href="/" class="logout">Voltar</a>
   </div>
 {% endblock %}
