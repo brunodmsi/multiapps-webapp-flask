@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mongoengine import MongoEngine, Document
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField
+from wtforms import StringField, PasswordField, IntegerField, FloatField
 from wtforms.validators import Email, Length, InputRequired
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 import programs.random_gen.main as rand_gen
+import programs.imc.imc as imc
 
 app = Flask(__name__)
 
@@ -36,6 +37,16 @@ class RegForm(FlaskForm):
 
 class GenRandForm(FlaskForm):
   lines = IntegerField('lines', validators=[InputRequired()], render_kw={"placeholder":"Insira a quantidade de palavras que deseja"})
+
+class IMCForm(FlaskForm):
+  height = FloatField('height', validators=[InputRequired()], render_kw={"placeholder":"Sua altura (ex. 1.82)"})
+  weight = FloatField('weight', validators=[InputRequired()], render_kw={"placeholder":"Seu peso (ex. 92.5)"})
+  sex = StringField('sex', validators=[InputRequired()], render_kw={"placeholder":"Seu sexo (ex. m/f)"})
+
+class ToDoListForm(FlaskForm):
+  title = StringField('title', validators=[InputRequired(), Length(max=30)], render_kw={"placeholder":"Titulo"})
+  content = StringField('title', validators=[InputRequired(), Length(min=6)], render_kw={"placeholder":"Texto"})
+
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -82,6 +93,21 @@ def gerador():
       return render_template('pages/gerador/gerador.html', wordlist=wordlist)
 
   return render_template('pages/gerador/gerador.html', form=form)
+
+@app.route('/imc', methods=['GET','POST'])
+def imcCheck():
+  form = IMCForm()
+  if request.method == 'POST':
+    if form.validate():
+      ret_value = imc.calculate(form.sex.data, form.height.data, form.weight.data)
+      imc_final = ret_value.split('@')
+      return render_template('pages/imc/imc.html', imc_value=imc_final[0], imc_result=imc_final[1])
+
+  return render_template('pages/imc/imc.html', form=form)
+
+@app.route('/imc', methods=['GET','POST'])
+def todoList():
+  form = ToDoListForm()
 
 @app.route('/logout', methods=['GET'])
 @login_required

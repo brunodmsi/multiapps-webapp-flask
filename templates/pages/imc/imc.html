@@ -1,0 +1,33 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+  
+    {% if form %}
+      <form action="/imc" method="post">
+        <p>Programa que ira calcular o seu IMC.</p>
+        {{ form.sex }}
+        {{ form.height }}
+        {{ form.weight }}
+
+        {{ form.hidden_tag() }}
+
+        <button type="submit">Calcular IMC</button>
+      </form>
+    {% endif %}
+
+    {% if imc_value %}
+      <ul class="providers">
+        <li class="provider">
+          <strong>Seu IMC tem o valor de:</strong><p>{{ imc_value }}</p>
+        </li>
+        <li class="provider">
+          <strong>Você está com:</strong><p>{{ imc_result }}</p>
+        </li>
+      </ul>
+    {% endif %}
+
+    <br>
+    <a href="/" class="logout">Voltar</a>
+  </div>
+{% endblock %}
