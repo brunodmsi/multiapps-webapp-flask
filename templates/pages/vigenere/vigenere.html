@@ -25,9 +25,10 @@
 
     {% if vig %}
       <ul class="providers">
+        <strong>A palavra {{ plaintext }} descriptografada é:</strong>
         <li class="provider">
           {% if decrypt %}
-            <strong>A palavra {{ plaintext }} descriptografada é:</strong><p>{{ vig }}</p>
+            <p>{{ vig }}</p>
           {% else %}
             <strong>A palavra {{ plaintext }} criptografada é:</strong><p>{{ vig }}</p>
           {% endif %}

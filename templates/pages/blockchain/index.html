@@ -20,8 +20,9 @@
     {% if chain %}
       <ul class="providers">
       {% for block in chain %}
+        <strong>#{{ block.index }}</strong>
         <li class="provider">
-          <strong>{{ block.hash }}</strong><strong>#{{ block.index }}</strong>
+          <strong>{{ block.hash }}</strong>
         </li>
       {% endfor %}
       </ul>
