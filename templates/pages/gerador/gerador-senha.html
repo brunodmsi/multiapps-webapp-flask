@@ -1,0 +1,19 @@
+{% extends "_layouts/base.html" %}
+
+{% block body %}
+  <div class="content">
+
+    {% if password %}
+      <ul class="providers">
+        <p>Senha gerada</p>
+        <li class="provider">
+          <strong>{{ password }}</strong>
+        </li>
+      </ul>
+
+      <br>
+      <a href="/" class="logout">Voltar</a>
+    {% endif %}
+
+  </div>
+{% endblock %}
