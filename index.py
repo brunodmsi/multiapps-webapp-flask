@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 app.config['MONGODB_SETTINGS'] = {
   'db': 'posting-flask',
-  'host': 'mongodb://demon:demon123@ds231133.mlab.com:31133/posting-flask'
+  'host': 'mongodb://demon:demona12345@ds029745.mlab.com:29745/multiapps-webapp-flask'
 }
 
 db = MongoEngine(app)
@@ -190,7 +190,7 @@ def todoListShow(todoId):
 @app.route('/todolist/delete/<todoId>', methods=['GET'])
 @login_required
 def todoListDelete(todoId):
-  todo = TodoList(id=todoId).first()
+  todo = TodoList.objects(id=todoId).first()
   if todo.user_id.id != current_user.id:
     return redirect('/')
   todo.delete()
