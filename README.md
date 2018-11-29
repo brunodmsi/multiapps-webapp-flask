@@ -1,7 +1,7 @@
 # Múltiplos Aplicativos no Flask
 Um website com várias aplicações desenvolvidas em Python durante o 4o período do curso de Ciência da Computação no CESUPA. Esta aplicação Web é o projeto final na matéria de Programação Avançada.  
   
-**A aplicação consistia em ter**
+**A aplicação consistia em ter:**
 > - O usuário deverá fazer requisições à aplicação por meio de um formulário HTML.  
 > - Implementar conceitos de Classes e Objetos.  
 > - Implementar conceitos de construtores.  
