@@ -15,12 +15,12 @@ import programs.pass_generator.gen as pass_gen
 app = Flask(__name__)
 
 app.config['MONGODB_SETTINGS'] = {
-  'db': 'posting-flask',
-  'host': 'mongodb://demon:demona12345@ds029745.mlab.com:29745/multiapps-webapp-flask'
+  'db': 'YOUR-DB-NAME',
+  'host': 'YOUR-DB-HOST'
 }
 
 db = MongoEngine(app)
-app.config['SECRET_KEY'] = 'PostingSecretKey'
+app.config['SECRET_KEY'] = 'YOUR-SECRET-KEY'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
